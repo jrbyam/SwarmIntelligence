@@ -13,9 +13,7 @@ public class TestBird : Boid
     // Start is called before the first frame update
     void Start()
     {
-        this.maxVelocity = 15f;
-        // StartCoroutine(newGoal());
-        // goal = new Vector3(0f, 50f, 0f);
+        this.maxVelocity = 25f;
     }
 
     // Update is called once per frame
@@ -45,7 +43,7 @@ public class TestBird : Boid
                 }
             }
         }
-        if (nearestNeighborDistance < 4) {
+        if (nearestNeighborDistance < 1f) {
             Vector3 direction = (transform.position - nearestNeighbor).normalized;
             this.v = direction;
         }
@@ -66,6 +64,9 @@ public class TestBird : Boid
         // if (Input.GetKey(KeyCode.W)) {
         //     transform.localEulerAngles = new Vector3(transform.localEulerAngles.x + 1f, transform.localEulerAngles.y, transform.localEulerAngles.z);
         // }
+
+        if  (Vector3.Distance(pBest, goal) < 5)
+            transform.parent.GetComponent<Flock>().goal = new Vector3(Random.Range(-100.0f, 100.0f), Random.Range(10.0f, 70.0f), Random.Range(-100.0f, 100.0f));
 
         // Always move "forward", direction now facing
         float speed = this.maxVelocity;

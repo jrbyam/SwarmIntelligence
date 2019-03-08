@@ -48,11 +48,12 @@ public class Flock : MonoBehaviour
         float centerZ = totalZ / count;
 
         flockCenter = new Vector3(centerX, centerY, centerZ);
+
         sphere.position = goal;
     }
 
     private IEnumerator newGoal() {
-        goal = new Vector3(Random.Range(-50.0f, 50.0f), Random.Range(10.0f, 70.0f), Random.Range(-50.0f, 50.0f));
+        goal = new Vector3(Random.Range(-100.0f, 100.0f), Random.Range(10.0f, 70.0f), Random.Range(-100.0f, 100.0f));
         yield return new WaitForSeconds(15);
         StartCoroutine(newGoal());
     }
