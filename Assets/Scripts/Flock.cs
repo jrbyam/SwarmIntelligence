@@ -6,10 +6,11 @@ public class Flock : MonoBehaviour
 {
     public Vector3 flockCenter;
     public int flockSize;
-    public GameObject boidTemplate;
+    public List<GameObject> boidTemplates;
     private float minDistance = 1f;
     public Vector3 goal;
     public Transform sphere;
+    public bool colors;
 
     // Start is called before the first frame update
     void Start()
@@ -17,7 +18,7 @@ public class Flock : MonoBehaviour
         for (int i = 0; i < flockSize; ++i) {
             Vector3 position = new Vector3(Random.Range(0.0f, 10.0f), Random.Range(0.0f, 10.0f), Random.Range(0.0f, 10.0f));
             Quaternion rotation = Random.rotation;
-            GameObject boid = Instantiate(boidTemplate, position, rotation);
+            GameObject boid = Instantiate(boidTemplates[colors ? Random.Range(1, boidTemplates.Count) : 0], position, rotation);
             if (boid.transform.localEulerAngles.x > 45f && boid.transform.localEulerAngles.x <= 180f)
                 boid.transform.localEulerAngles = new Vector3(45f, boid.transform.localEulerAngles.y, boid.transform.localEulerAngles.z);
             if (boid.transform.localEulerAngles.x < 315f && boid.transform.localEulerAngles.x > 180f)
@@ -50,6 +51,9 @@ public class Flock : MonoBehaviour
         flockCenter = new Vector3(centerX, centerY, centerZ);
 
         sphere.position = goal;
+
+        if (Input.GetKey(KeyCode.Tab))
+            goal = new Vector3(Random.Range(-100.0f, 100.0f), Random.Range(10.0f, 70.0f), Random.Range(-100.0f, 100.0f));
     }
 
     private IEnumerator newGoal() {

@@ -258,7 +258,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -50, y: 10, z: -50}
+  m_LocalPosition: {x: 0, y: 35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -505,7 +505,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flockCenter: {x: 0, y: 0, z: 0}
   flockSize: 100
-  boidTemplate: {fileID: 4050457076542132822, guid: 407324e27f1c4439da727cb370b0a5a4,
-    type: 3}
+  boidTemplates:
+  - {fileID: 4050457076542132822, guid: e7288d33d32d9479ab8c1dc7442631b2, type: 3}
+  - {fileID: 4050457076542132822, guid: 42d163f91788f4c39b4f7d90ecbb1315, type: 3}
+  - {fileID: 4050457076542132822, guid: 03fb764deb06f4580ad94984dda5bdcd, type: 3}
+  - {fileID: 4050457076542132822, guid: 13b133048b992492fbe3ed4201f90031, type: 3}
+  - {fileID: 4050457076542132822, guid: 407324e27f1c4439da727cb370b0a5a4, type: 3}
+  - {fileID: 4050457076542132822, guid: 7b03754bf9afa4aec8f4db84c96e122c, type: 3}
   goal: {x: 0, y: 50, z: 0}
   sphere: {fileID: 706851866}
