@@ -13,7 +13,7 @@ public class TestBird : Boid
     // Start is called before the first frame update
     void Start()
     {
-        this.maxVelocity = 25f;
+        this.maxVelocity = 20f;
     }
 
     // Update is called once per frame
@@ -71,7 +71,8 @@ public class TestBird : Boid
         // Always move "forward", direction now facing
         float speed = this.maxVelocity;
         // If the bird is pointing down at all, the speed is increased based on how much it's pointing down
-        // speed *= 1 + Vector3.Dot(transform.forward, Vector3.down);
+        if (Vector3.Dot(transform.forward, Vector3.down) > -0.4f)
+            speed *= 1 + Vector3.Dot(transform.forward, Vector3.down);
         transform.position += transform.forward * speed * Time.deltaTime;
     }
 
