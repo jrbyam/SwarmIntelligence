@@ -295,7 +295,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &699673650
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -504,7 +504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flockCenter: {x: 0, y: 0, z: 0}
-  flockSize: 100
+  flockSize: 50
   boidTemplates:
   - {fileID: 4050457076542132822, guid: e7288d33d32d9479ab8c1dc7442631b2, type: 3}
   - {fileID: 4050457076542132822, guid: 42d163f91788f4c39b4f7d90ecbb1315, type: 3}
@@ -512,5 +512,6 @@ MonoBehaviour:
   - {fileID: 4050457076542132822, guid: 13b133048b992492fbe3ed4201f90031, type: 3}
   - {fileID: 4050457076542132822, guid: 407324e27f1c4439da727cb370b0a5a4, type: 3}
   - {fileID: 4050457076542132822, guid: 7b03754bf9afa4aec8f4db84c96e122c, type: 3}
-  goal: {x: 0, y: 50, z: 0}
+  goal: {x: 50, y: 50, z: 0}
   sphere: {fileID: 706851866}
+  colors: 0

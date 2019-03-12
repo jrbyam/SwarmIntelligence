@@ -25,7 +25,6 @@ public class TestBird : Boid
         if (Vector3.Distance(goal, transform.position) < Vector3.Distance(goal, gBest)) gBest = transform.position;
 
         // Handle PSO here
-        this.v = transform.forward * this.maxVelocity;
         float x = this.v.x + (c1 * Random.Range(0f, 1f) * (pBest.x - transform.position.x)) + (c2 * Random.Range(0f, 1f) * (gBest.x - transform.position.x));
         float y = this.v.y + (c1 * Random.Range(0f, 1f) * (pBest.y - transform.position.y)) + (c2 * Random.Range(0f, 1f) * (gBest.y - transform.position.y));
         float z = this.v.z + (c1 * Random.Range(0f, 1f) * (pBest.z - transform.position.z)) + (c2 * Random.Range(0f, 1f) * (gBest.z - transform.position.z));
@@ -51,6 +50,7 @@ public class TestBird : Boid
         Vector3 current = new Vector3(transform.position.x + transform.forward.x, transform.position.y + transform.forward.y, transform.position.z + transform.forward.z);
         Vector3 target = new Vector3(transform.position.x + this.v.x, transform.position.y + this.v.y, transform.position.z + this.v.z);
         transform.LookAt(Vector3.Slerp(current, target, Time.deltaTime));
+
         // Temporary key controls to get correct flight model
         // if (Input.GetKey(KeyCode.A)) {
         //     transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y - 1f, transform.localEulerAngles.z);
@@ -72,8 +72,9 @@ public class TestBird : Boid
         float speed = this.maxVelocity;
         // If the bird is pointing down at all, the speed is increased based on how much it's pointing down
         if (Vector3.Dot(transform.forward, Vector3.down) > -0.4f)
-            speed *= 1 + Vector3.Dot(transform.forward, Vector3.down);
+            speed *= 1 + Vector3.Dot(transform.forward, Vector3.down) / 2;
         transform.position += transform.forward * speed * Time.deltaTime;
+        this.v = transform.forward * speed;
     }
 
     private IEnumerator LevelOut() {
