@@ -504,7 +504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flockCenter: {x: 0, y: 0, z: 0}
-  flockSize: 50
+  flockSize: 200
   boidTemplates:
   - {fileID: 4050457076542132822, guid: e7288d33d32d9479ab8c1dc7442631b2, type: 3}
   - {fileID: 4050457076542132822, guid: 42d163f91788f4c39b4f7d90ecbb1315, type: 3}
