@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
 using System.Diagnostics;
-
+using UnityEngine.Profiling;
 
 public class Flock : MonoBehaviour
 {
@@ -124,45 +124,114 @@ public class Flock : MonoBehaviour
         // }
 
         // Base PSO with state vector
-        for (int i = 0; i < birds.Count; ++i)
+        // for (int i = 0; i < flockSize; ++i)
+        // {
+        //     Profiler.BeginSample("State Vector Loop");
+        //     Vector3 position = birds[i].position;
+        //     totalX += position.x;
+        //     totalY += position.y;
+        //     totalZ += position.z;
+        //     count++;
+
+        //     // Update personal and global bests
+        //     float boidToGoal = Vector3.Distance(goal, position);
+        //     if (boidToGoal < Vector3.Distance(goal, birds[i].pBest)) birds[i].pBest = position;
+        //     if (boidToGoal < Vector3.Distance(goal, StateVector.gBest)) StateVector.gBest = position;
+
+        //     // Handle PSO here
+        //     Vector3 velocity = birds[i].velocity;
+        //     float x = velocity.x + (c1 * Random.Range(0f, 1f) * (birds[i].pBest.x - position.x)) + (c2 * Random.Range(0f, 1f) * (StateVector.gBest.x - position.x));
+        //     float y = velocity.y + (c1 * Random.Range(0f, 1f) * (birds[i].pBest.y - position.y)) + (c2 * Random.Range(0f, 1f) * (StateVector.gBest.y - position.y));
+        //     float z = velocity.z + (c1 * Random.Range(0f, 1f) * (birds[i].pBest.z - position.z)) + (c2 * Random.Range(0f, 1f) * (StateVector.gBest.z - position.z));
+
+        //     Vector3 nearestNeighbor = Vector3.zero;
+        //     float nearestNeighborDistance = Mathf.Infinity;
+        //     for (int j = 0; j < flockSize; ++j) {
+        //         if (i != j) {
+        //             float distance = Vector3.Distance(position, birds[j].position);
+        //             if (distance < nearestNeighborDistance) {
+        //                 nearestNeighborDistance = distance;
+        //                 nearestNeighbor = birds[j].position;
+        //             }
+        //         }
+        //     }
+        //     if (nearestNeighborDistance < minDistance) {
+        //         Vector3 direction = (position - nearestNeighbor).normalized;
+        //         birds[i].velocity = direction;
+        //     } else {
+        //         birds[i].velocity = new Vector3(x, y, z);
+        //     }
+        //     velocity = birds[i].velocity;
+
+        //     Transform boid = transform.GetChild(i);
+        //     Vector3 forward = boid.forward;
+        //     Vector3 current = new Vector3(position.x + forward.x, position.y + forward.y, position.z + forward.z);
+        //     Vector3 target = new Vector3(position.x + velocity.x, position.y + velocity.y, position.z + velocity.z);
+        //     boid.LookAt(Vector3.Slerp(current, target, Time.deltaTime));
+        //     forward = boid.forward;
+
+        //     // Always move "forward", direction now facing
+        //     float speed = maxVelocity;
+        //     // If the bird is pointing down at all, the speed is increased based on how much it's pointing down
+        //     if (Vector3.Dot(forward, Vector3.down) > -0.4f)
+        //         speed *= 1 + Vector3.Dot(forward, Vector3.down) / 2;
+        //     boid.position += forward * speed * Time.deltaTime;
+        //     birds[i].position = boid.position;
+        //     birds[i].velocity = forward * speed;
+
+        //     if  (Vector3.Distance(birds[i].pBest, goal) < 5)
+        //         goal = new Vector3(Random.Range(-50.0f, 50.0f), Random.Range(10.0f, 70.0f), Random.Range(-50.0f, 50.0f));
+        //     Profiler.EndSample();
+        // }
+
+        // Local version of PSO
+        for (int i = 0; i < flockSize; ++i)
         {
-            totalX += birds[i].position.x;
-            totalY += birds[i].position.y;
-            totalZ += birds[i].position.z;
+            Profiler.BeginSample("State Vector Loop");
+            Vector3 position = birds[i].position;
+            totalX += position.x;
+            totalY += position.y;
+            totalZ += position.z;
             count++;
 
-            // Update personal and global bests
-            float boidToGoal = Vector3.Distance(goal, birds[i].position);
-            if (boidToGoal < Vector3.Distance(goal, birds[i].pBest)) birds[i].pBest = birds[i].position;
-            if (boidToGoal < Vector3.Distance(goal, StateVector.gBest)) StateVector.gBest = birds[i].position;
+            // Update personal and local bests
+            float boidToGoal = Vector3.Distance(goal, position);
+            if (boidToGoal < Vector3.Distance(goal, birds[i].pBest)) birds[i].pBest = position;
+            if (boidToGoal < Vector3.Distance(goal, birds[i].lBest)) birds[i].lBest = position;
+            // If my neighbor's lBest is better than mine, update mine
+            int neighborIdx = i + (i % 2 == 0 ? 1 : -1);
+            if (neighborIdx == flockSize) neighborIdx = 0;
+            if (Vector3.Distance(goal, birds[neighborIdx].lBest) < Vector3.Distance(goal, birds[i].lBest)) birds[i].lBest = birds[neighborIdx].lBest;
 
             // Handle PSO here
-            float x = birds[i].velocity.x + (c1 * Random.Range(0f, 1f) * (birds[i].pBest.x - birds[i].position.x)) + (c2 * Random.Range(0f, 1f) * (StateVector.gBest.x - birds[i].position.x));
-            float y = birds[i].velocity.y + (c1 * Random.Range(0f, 1f) * (birds[i].pBest.y - birds[i].position.y)) + (c2 * Random.Range(0f, 1f) * (StateVector.gBest.y - birds[i].position.y));
-            float z = birds[i].velocity.z + (c1 * Random.Range(0f, 1f) * (birds[i].pBest.z - birds[i].position.z)) + (c2 * Random.Range(0f, 1f) * (StateVector.gBest.z - birds[i].position.z));
-
-            birds[i].velocity = new Vector3(x, y, z);
+            Vector3 velocity = birds[i].velocity;
+            float x = velocity.x + (c1 * Random.Range(0f, 1f) * (birds[i].pBest.x - position.x)) + (c2 * Random.Range(0f, 1f) * (birds[i].lBest.x - position.x));
+            float y = velocity.y + (c1 * Random.Range(0f, 1f) * (birds[i].pBest.y - position.y)) + (c2 * Random.Range(0f, 1f) * (birds[i].lBest.y - position.y));
+            float z = velocity.z + (c1 * Random.Range(0f, 1f) * (birds[i].pBest.z - position.z)) + (c2 * Random.Range(0f, 1f) * (birds[i].lBest.z - position.z));
 
             Vector3 nearestNeighbor = Vector3.zero;
             float nearestNeighborDistance = Mathf.Infinity;
-            for (int j = 0; j < birds.Count; ++j) {
+            for (int j = 0; j < flockSize; ++j) {
                 if (i != j) {
-                    float distance = Vector3.Distance(birds[i].position, birds[j].position);
+                    float distance = Vector3.Distance(position, birds[j].position);
                     if (distance < nearestNeighborDistance) {
                         nearestNeighborDistance = distance;
                         nearestNeighbor = birds[j].position;
                     }
                 }
             }
-            if (nearestNeighborDistance < 1f) {
-                Vector3 direction = (birds[i].position - nearestNeighbor).normalized;
+            if (nearestNeighborDistance < minDistance) {
+                Vector3 direction = (position - nearestNeighbor).normalized;
                 birds[i].velocity = direction;
+            } else {
+                birds[i].velocity = new Vector3(x, y, z);
             }
+            velocity = birds[i].velocity;
 
             Transform boid = transform.GetChild(i);
             Vector3 forward = boid.forward;
-            Vector3 current = new Vector3(birds[i].position.x + forward.x, birds[i].position.y + forward.y, birds[i].position.z + forward.z);
-            Vector3 target = new Vector3(birds[i].position.x + birds[i].velocity.x, birds[i].position.y + birds[i].velocity.y, birds[i].position.z + birds[i].velocity.z);
+            Vector3 current = new Vector3(position.x + forward.x, position.y + forward.y, position.z + forward.z);
+            Vector3 target = new Vector3(position.x + velocity.x, position.y + velocity.y, position.z + velocity.z);
             boid.LookAt(Vector3.Slerp(current, target, Time.deltaTime));
             forward = boid.forward;
 
@@ -177,7 +246,9 @@ public class Flock : MonoBehaviour
 
             if  (Vector3.Distance(birds[i].pBest, goal) < 5)
                 goal = new Vector3(Random.Range(-50.0f, 50.0f), Random.Range(10.0f, 70.0f), Random.Range(-50.0f, 50.0f));
+            Profiler.EndSample();
         }
+
         timer.Stop();
         times.Add(timer.ElapsedMilliseconds);
         timer.Reset();
