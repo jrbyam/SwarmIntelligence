@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class SceneController : MonoBehaviour
 {
-    public static int algorithm = 0; // [ Global PSO, Local PSO, UPSO, CLPSO, ELPSO ]
-    public static int flockSize = 100;
+    public static int algorithm = 1; // [ Global PSO, Local PSO, UPSO, CLPSO, ELPSO ]
+    public static int flockSize = 500;
     public static float maxVelocity = 20f;
     public static float c1 = 2f;
     public static float c2 = 2f;
@@ -23,7 +23,7 @@ public class SceneController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Time.timeScale = 0f;
+        
     }
 
     // Update is called once per frame
