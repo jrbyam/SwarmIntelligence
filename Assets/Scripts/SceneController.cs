@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SceneController : MonoBehaviour
 {
-    public static int algorithm = 1; // [ Global PSO, Local PSO, UPSO, CLPSO, ELPSO ]
+    public static int algorithm = 0; // [ Global PSO, Local PSO, UPSO, CLPSO, ELPSO ]
     public static int flockSize = 500;
     public static float maxVelocity = 20f;
     public static float c1 = 2f;
@@ -53,6 +53,15 @@ public class SceneController : MonoBehaviour
         options.GetChild(3).gameObject.SetActive(algorithm == 2);
         options.GetChild(4).gameObject.SetActive(algorithm == 3);
         options.GetChild(5).gameObject.SetActive(algorithm == 4);
+
+        // Set c1 and c2 to their default values for the different algorithms
+        if (algorithm < 3) {
+            GameObject.Find("C1").transform.GetChild(1).GetComponent<Slider>().value = 2f;
+            GameObject.Find("C2").transform.GetChild(1).GetComponent<Slider>().value = 2f;
+        } else {
+            GameObject.Find("C1").transform.GetChild(1).GetComponent<Slider>().value = 1.49445f;
+            if (algorithm == 4) GameObject.Find("C2").transform.GetChild(1).GetComponent<Slider>().value = 1.49445f;
+        }
     }
 
     public void UpdateFlockSize(Slider slider) {

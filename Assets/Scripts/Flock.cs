@@ -18,10 +18,6 @@ public class Flock : MonoBehaviour
     private List<float> times;
     private KdTree<StateVector> birds;
 
-
-    // private float c1 = 1.49445f;
-    // private float c2 = 1.49445f;
-
     private List<Vector3> exampleSet = new List<Vector3>(); // Example set for ELPSO
 
     // Start is called before the first frame update
