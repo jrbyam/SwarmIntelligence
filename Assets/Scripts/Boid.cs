@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class Boid
 {
+    // These member variables make up the percepts
     public static Vector3 gBest { get; set; }
     public static List<Vector3> exampleSet = new List<Vector3>(); // Example set for ELPSO
     public Vector3 pBest { get; set; }
     public Vector3 lBest { get; set; }
-    public Vector3 position { get; set; }
-    public Vector3 velocity { get; set; }
     public Vector3 nearestNeighbor { get; set; }
     public List<int> neighborIdxs { get; set; }
     public Vector3 randomOtherPBest { get; set; }
+
+    // These member variables are the properties
+    public Vector3 position { get; set; }
+    public Vector3 velocity { get; set; }
 
     public Boid() {
         gBest = Vector3.zero;
@@ -21,7 +24,17 @@ public class Boid
         neighborIdxs = new List<int>();
     }
 
-    public void Action(Transform bird) {
+    public void Sense(KdTree<Boid> birds) {
+        nearestNeighbor = birds.FindClosest(position).position;
+        randomOtherPBest = birds[Random.Range(0, SceneController.flockSize)].pBest; // For CLPSO and ELPSO
+
+        // For Local PSO and UPSO, check neighbors for lBest values
+        if (SceneController.algorithm == 1 || SceneController.algorithm == 2) {
+            // If any of my neighbor's lBest is better than mine, update mine
+            for (int j = 0; j < SceneController.n; ++j) {
+                if (Vector3.Distance(Flock.goal, birds[neighborIdxs[j]].lBest) < Vector3.Distance(Flock.goal, lBest)) lBest = birds[neighborIdxs[j]].lBest;
+            }
+        }
 
         // Update personal, global and local bests
         float boidToGoal = Vector3.Distance(Flock.goal, position);
@@ -41,7 +54,9 @@ public class Boid
         //         }
         //     }
         // }
+    }
 
+    public void Think() {
         if (Vector3.Distance(position, nearestNeighbor) < Flock.minDistance) {
             Vector3 direction = (position - nearestNeighbor).normalized;
             velocity = direction;
@@ -107,7 +122,9 @@ public class Boid
                     break;
             }
         }
+    }
 
+    public void Act(Transform bird) {
         Vector3 forward = bird.forward;
         Vector3 current = new Vector3(position.x + forward.x, position.y + forward.y, position.z + forward.z);
         Vector3 target = new Vector3(position.x + velocity.x, position.y + velocity.y, position.z + velocity.z);

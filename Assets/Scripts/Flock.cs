@@ -49,20 +49,9 @@ public class Flock : MonoBehaviour
                 totalZ += position.z;
                 count++;
 
-                // Sense
-                bird.nearestNeighbor = birds.FindClosest(position).position;
-                bird.randomOtherPBest = birds[Random.Range(0, SceneController.flockSize)].pBest; // For CLPSO and ELPSO
-
-                // For Local PSO and UPSO, check neighbors for LBEST values
-                if (SceneController.algorithm == 1 || SceneController.algorithm == 2) {
-                    // If any of my neighbor's lBest is better than mine, update mine
-                    for (int j = 0; j < SceneController.n; ++j) {
-                        if (Vector3.Distance(goal, birds[bird.neighborIdxs[j]].lBest) < Vector3.Distance(goal, birds[i].lBest)) birds[i].lBest = birds[bird.neighborIdxs[j]].lBest;
-                    }
-                }
-
-                // Act
-                bird.Action(transform.GetChild(i));
+                bird.Sense(birds);
+                bird.Think();
+                bird.Act(transform.GetChild(i));
 
                 // Profiler.EndSample();
             }
