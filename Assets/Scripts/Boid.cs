@@ -93,9 +93,9 @@ public class Boid
                     float pBestY = Random.Range(0, 101) <= (1 - lp) * 100 ? randomOtherPBest.y : pBest.y;
                     float pBestZ = Random.Range(0, 101) <= (1 - lp) * 100 ? randomOtherPBest.z : pBest.z;
                     // Decide based on a learning probability whether or not to use my pBest or the pBest of a random neighbor
-                    x = velocity.x + (SceneController.c1 * Random.Range(0f, 1f) * (pBestX - position.x));
-                    y = velocity.y + (SceneController.c1 * Random.Range(0f, 1f) * (pBestY - position.y));
-                    z = velocity.z + (SceneController.c1 * Random.Range(0f, 1f) * (pBestZ - position.z));
+                    x = SceneController.w * velocity.x + (SceneController.c1 * Random.Range(0f, 1f) * (pBestX - position.x));
+                    y = SceneController.w * velocity.y + (SceneController.c1 * Random.Range(0f, 1f) * (pBestY - position.y));
+                    z = SceneController.w * velocity.z + (SceneController.c1 * Random.Range(0f, 1f) * (pBestZ - position.z));
                     velocity = new Vector3(x, y, z);
                     break;
                 case 4: // ELPSO

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class SceneController : MonoBehaviour
 {
     public static int algorithm = 0; // [ Global PSO, Local PSO, UPSO, CLPSO, ELPSO ]
-    public static int flockSize = 500;
+    public static int flockSize = 300;
     public static float maxVelocity = 20f;
     public static float c1 = 2f;
     public static float c2 = 2f;
